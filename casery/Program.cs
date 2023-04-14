@@ -1,62 +1,42 @@
-﻿//deklarujemy funkcję zwracającą stringa i przyjmującaą stringa jako argument
-using System.Globalization;
+﻿//słownik do szyfrowania
+ const string chars = "AĄBCĆDEĘFGHIJKLŁMNŃOÓPRSŚTUVWXYZŹŻ ";
+string toAsciiCaesar(string clearText);
+String fromAsciiCaesar(string encrypatedText);
 
-string toAsciiCaesar(string clearText)
+string toArrayCaesar(String clearText)
 {
-    //zamienimay na wielkie litery
+    //zmień tekst na wielkie litery
     clearText = clearText.ToUpper();
-    // lteruj przez cały tekst litera po literze
-    //deklarujemy string wynikowy
-    string encryptadedText = "";
+    //zdefinuj zmienną na zaszyfrowany tekst
+    string encryptedTxt = "";
+        //deklarujemy tablicę pojedyńczych charów i wypełniamy ją
+        char[] charArry = chars.ToCharArray();
+    //przechodzimy pętlą przez tekst do zaszyfrowania
     foreach (char c in clearText)
     {
-        // pomiń wszystkie znaki poza literami z alfabetu łacińskiego
-        if (c >= 65 && c <= 90)
+        //znajdujemy pozycję w słowniku pierwotnej (nie zaszyfrowaniej)
+        int index = Array.IndexOf(charArry, c);
+        //dodajemy wartośc klucza
+        index += 3;
+        //jeżeli wynikowy index jest wyższy niż liczba liter w słowniku
+        if(index > charArry.Length - 1)
         {
-            //wyciągamy kod ascii danej litery
-            // w języku c# rzutowanie jawne z char na int powoduje pobranie wartości ascii
-            int asciiCode = (int)c;
-            //dodajemy wartośc klucza
-            asciiCode += 3;
-            //sprwadzamy czyy nie przekroczyliśmy ostatniego znaku (z, 90)
-            if (asciiCode > 90)
-                //jeśli przekroczymy to cofnij o długość alfabetu
-                asciiCode -= 26;
-            //zamieniamy kod z powrotem na znak
-            char encrypatedChar = (char)asciiCode;
-            //dopisujemy do szyfru
-            encryptadedText += encrypatedChar;
+            //odjemji
+            index -= charArry.Length;
         }
-    }
-    //zwroc zakodowany string
-    return encryptadedText;
-}
+            //zapisz do zaszyfrowanego tekstu literę pod indeksem
+            encryptedTxt+= charArry[index];
 
-String fromAsciiCaesar(string encrypatedText)
-{
-    string clearText = "";
-    foreach (char c in encrypatedText)
-    {
-        //pomiń wszystkie znaki poza literami z alfabetu łacińskiego
-        if (c >= 65 && c <= 90)
-        {
-            //wyciągamy kod ascii danej litery
-            // w języku c# rzutowanie jawne z char na int powoduje pobranie
-            int asciiCode = (int)c;
-            asciiCode -= 3;
-            if (asciiCode > 90)
-                asciiCode -= 26;
-            char encrypatedChar = (char)asciiCode;
-            encrypatedText+= encrypatedChar;
-        }// zwroc zakodowany string
-        string uncryptedText = "";
     }
-    return encrypatedText;
-}
 
-// Caesar szyfr
+    return encryptedTxt;
+}
 //zddefinuj string do zaszyfrowania 
 string clearText = "Ala ma kota, kot ma Ale, a sierotka ma rysia ";
+string encryptedText = toAsciiCaesar(clearText);
+string encryptedText2 = toArrayCaesar(clearText);
 
-
+Console.WriteLine("Zaszyfrowany tekst;" + encryptedText);
 Console.WriteLine("Zaszyforwany tekst:" + fromAsciiCaesar(clearText));
+
+Console.WriteLine("Zaszyfrowany drugą metoda tekst:" + encryptedText2);
